@@ -19,7 +19,6 @@ import { FormBudget } from './components/FormBudget';
 import { Expense } from './interface/interface';
 import { ExpenseList } from './components/ExpenseList';
 import { Filter } from './components/Filter';
-import { set } from 'react-native-reanimated';
 
 const BudgetPlannerApp = () => {
   const [budget, setBudget] = useState<string>('');
@@ -112,6 +111,13 @@ const BudgetPlannerApp = () => {
         {
           text: 'Ok',
           onPress: () => {
+            if (filteredExpense) {
+              const updateFilteredExpense = filteredExpense.filter(
+                filterExpenseState => filterExpenseState.id !== id
+              );
+              setfilteredExpense(updateFilteredExpense);
+            }
+
             const updateExpenses = expenses.filter(
               expense => expense.id !== id,
             );
@@ -190,6 +196,8 @@ const BudgetPlannerApp = () => {
             setExpense={setExpense}
             expense={expense}
             deleteExpense={deleteExpense}
+            filteredExpense={filteredExpense}
+            setfilteredExpense={setfilteredExpense}
           />
         </Modal>
       )}
@@ -216,7 +224,6 @@ const styles = StyleSheet.create({
     minHeight: 400,
   },
   container: {
-    flex: 1,
     backgroundColor: '#F5F5F5',
   },
   image: {

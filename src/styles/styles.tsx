@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 const globalStyles = StyleSheet.create({
   container: {
@@ -7,7 +7,7 @@ const globalStyles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 40,
     paddingHorizontal: 20,
-    transform: [{translateY: 50}],
+    transform: [{ translateY: 50 }],
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

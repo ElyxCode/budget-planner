@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, Text, TextInput, View, StyleSheet} from 'react-native';
+import { Pressable, Text, TextInput, View, StyleSheet } from 'react-native';
 
 import globalStyles from '../styles/styles';
 
@@ -9,7 +9,7 @@ interface Props {
   setBudget: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const NewBudget = ({handlerNewBudget, budget, setBudget}: Props) => {
+export const NewBudget = ({ handlerNewBudget, budget, setBudget }: Props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.labelBudget}>Define budget</Text>

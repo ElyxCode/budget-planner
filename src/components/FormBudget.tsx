@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   SafeAreaView,
   Text,
@@ -9,12 +9,12 @@ import {
   Alert,
 } from 'react-native';
 
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 
 import globalStyles from '../styles/styles';
-import {useForm} from '../hooks/useForm';
-import {Expense} from '../interface/interface';
-import {generateId} from '../helpers/idGenerator';
+import { useForm } from '../hooks/useForm';
+import { Expense } from '../interface/interface';
+import { generateId } from '../helpers/idGenerator';
 
 interface Props {
   setShowExpenseModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,6 +22,8 @@ interface Props {
   expenses: Expense[];
   setExpense: React.Dispatch<React.SetStateAction<Expense>>;
   expense: Expense;
+  setfilteredExpense: React.Dispatch<React.SetStateAction<Expense[]>>;
+  filteredExpense: Expense[];
   deleteExpense: (id: string) => void;
 }
 
@@ -32,8 +34,10 @@ export const FormBudget = ({
   setExpense,
   expense,
   deleteExpense,
+  setfilteredExpense,
+  filteredExpense
 }: Props) => {
-  const {form, setFormValue, id, name, amount, category, onChange} =
+  const { form, setFormValue, id, name, amount, category, onChange } =
     useForm<Expense>({
       id: '',
       name: '',
@@ -66,6 +70,13 @@ export const FormBudget = ({
     }
 
     if (id) {
+      if (filteredExpense) {
+        const updateFilteredExpenses = filteredExpense.map(expenseFilteredState =>
+          expenseFilteredState.id === id ? form : expenseFilteredState
+        );
+        setfilteredExpense(updateFilteredExpenses);
+      }
+
       const updateExpense = expenses.map(expenseState =>
         expenseState.id === id ? form : expenseState,
       );
