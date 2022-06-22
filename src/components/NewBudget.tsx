@@ -1,5 +1,6 @@
 import React from 'react';
 import {Pressable, Text, TextInput, View, StyleSheet} from 'react-native';
+
 import globalStyles from '../styles/styles';
 
 interface Props {
@@ -29,7 +30,9 @@ export const NewBudget = ({handlerNewBudget, budget, setBudget}: Props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {...globalStyles.container},
+  container: {
+    ...globalStyles.container,
+  },
   inputBudget: {
     backgroundColor: '#F5F5F5',
     padding: 10,

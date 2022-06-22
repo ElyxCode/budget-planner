@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Alert,
   SafeAreaView,
@@ -10,13 +10,16 @@ import {
   ScrollView,
 } from 'react-native';
 
-import {Header} from './components/Header';
-import {NewBudget} from './components/NewBudget';
-import {ControlBudget} from './components/ControlBudget';
-import {FormBudget} from './components/FormBudget';
-import {Expense} from './interface/interface';
-import {ExpenseList} from './components/ExpenseList';
-import {Filter} from './components/Filter';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { Header } from './components/Header';
+import { NewBudget } from './components/NewBudget';
+import { ControlBudget } from './components/ControlBudget';
+import { FormBudget } from './components/FormBudget';
+import { Expense } from './interface/interface';
+import { ExpenseList } from './components/ExpenseList';
+import { Filter } from './components/Filter';
+import { set } from 'react-native-reanimated';
 
 const BudgetPlannerApp = () => {
   const [budget, setBudget] = useState<string>('');
@@ -27,10 +30,73 @@ const BudgetPlannerApp = () => {
   const [filter, setFilter] = useState<string>('');
   const [filteredExpense, setfilteredExpense] = useState<Expense[]>([]);
 
+  useEffect(() => {
+    const getBudgetStorage = async () => {
+      try {
+        const budgetStorage =
+          (await AsyncStorage.getItem('budget-planner')) ?? '';
+        if (!budgetStorage) {
+          return setIsValidBudget(false);
+        }
+
+        setBudget(budgetStorage);
+        setIsValidBudget(true);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getBudgetStorage();
+  }, []);
+
+  useEffect(() => {
+    if (isValidBudget) {
+      const saveBudgetStorage = async () => {
+        try {
+          await AsyncStorage.setItem('budget-planner', budget);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      saveBudgetStorage();
+    }
+  }, [isValidBudget]);
+
+  useEffect(() => {
+    const getExpensesStorage = async () => {
+      try {
+        const expensesStorage = await AsyncStorage.getItem('expenses-planner');
+        if (!expensesStorage) {
+          return setExpenses([]);
+        }
+        const setExpensesFromStorage: Expense[] = JSON.parse(expensesStorage);
+        setExpenses(setExpensesFromStorage);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getExpensesStorage();
+  }, []);
+
+  useEffect(() => {
+    const setExpensesStorage = async () => {
+      try {
+        await AsyncStorage.setItem(
+          'expenses-planner',
+          JSON.stringify(expenses),
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    setExpensesStorage();
+  }, [expenses]);
+
   const handlerNewBudget = (budget: string) => {
     if (!Number(budget)) {
       return Alert.alert('Error', 'The budget cannot be 0 o less', [
-        {text: 'Ok'},
+        { text: 'Ok' },
       ]);
     }
 
@@ -42,7 +108,7 @@ const BudgetPlannerApp = () => {
       'Error',
       'Are you sure you want to delete the expense? this action is not reversible',
       [
-        {text: 'Cancel'},
+        { text: 'Cancel' },
         {
           text: 'Ok',
           onPress: () => {
@@ -58,13 +124,35 @@ const BudgetPlannerApp = () => {
     );
   };
 
+  const handleRebootApp = () => {
+
+    const rebootApp = async () => {
+      try {
+        await AsyncStorage.clear();
+        setBudget('');
+        setExpenses([]);
+        setFilter('');
+        setfilteredExpense([]);
+        setIsValidBudget(false);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    Alert.alert('Do you want to delete the saved data?', 'This action will delete the budget and expenses', [{ text: 'Cancel' }, {
+      text: 'Yes, delete', onPress: () => {
+        rebootApp();
+      }
+    }])
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.header}>
           <Header />
           {isValidBudget ? (
-            <ControlBudget budget={budget} Expense={expenses} />
+            <ControlBudget budget={budget} Expense={expenses} handleRebootApp={handleRebootApp} />
           ) : (
             <NewBudget
               handlerNewBudget={handlerNewBudget}
@@ -136,7 +224,6 @@ const styles = StyleSheet.create({
     height: 60,
   },
   btnAddSpent: {
-    // backgroundColor: '#F00',
     width: 60,
     height: 60,
     position: 'absolute',

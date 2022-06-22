@@ -1,18 +1,19 @@
-import React, {useState, useEffect} from 'react';
-import {Image, View, StyleSheet, Text} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Pressable, View, StyleSheet, Text } from 'react-native';
 
 import CircularProgress from 'react-native-circular-progress-indicator';
 
-import {formatAmount} from '../helpers/formatAmount';
+import { formatAmount } from '../helpers/formatAmount';
 import globalStyles from '../styles/styles';
-import {Expense} from '../interface/interface';
+import { Expense } from '../interface/interface';
 
 interface Props {
   budget: string;
   Expense: Expense[];
+  handleRebootApp: () => void;
 }
 
-export const ControlBudget = ({budget, Expense}: Props) => {
+export const ControlBudget = ({ budget, Expense, handleRebootApp }: Props) => {
   const [budgetAvailable, setBudgetAvailable] = useState<number>(0);
   const [budgetSpent, setBudgetSpent] = useState<number>(0);
   const [porcentSpent, setPorcentSpent] = useState<number>(0);
@@ -49,12 +50,18 @@ export const ControlBudget = ({budget, Expense}: Props) => {
           inActiveStrokeWidth={20}
           activeStrokeColor="#3B82F6"
           activeStrokeWidth={20}
-          titleStyle={{fontWeight: 'bold', fontSize: 20, bottom: 20}}
+          titleStyle={{ fontWeight: 'bold', fontSize: 20, bottom: 20 }}
           titleColor="#64748B"
         />
       </View>
 
       <View style={styles.infoBudgetContainer}>
+        <Pressable
+          style={styles.btnReboot}
+          onPress={() => handleRebootApp()}
+        >
+          <Text style={styles.textBtnReboot}>Reboot app</Text>
+        </Pressable>
         <Text style={styles.budgetInfo}>
           <Text style={styles.labelInfo}>Budget: </Text>
           {formatAmount(budget)}
@@ -93,4 +100,16 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#3B82F6',
   },
+  btnReboot: {
+    backgroundColor: '#DB2777',
+    padding: 10,
+    marginBottom: 40,
+    borderRadius: 5
+  },
+  textBtnReboot: {
+    textAlign: 'center',
+    color: '#FFF',
+    fontWeight: 'bold',
+    textTransform: 'uppercase'
+  }
 });

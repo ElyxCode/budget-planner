@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import {Expense} from '../interface/interface';
-import {ExpenseCard} from './ExpenseCard';
+import { Text, View, StyleSheet } from 'react-native';
+import { Expense } from '../interface/interface';
+import { ExpenseCard } from './ExpenseCard';
 
 interface Props {
   expenses: Expense[];
@@ -24,26 +24,26 @@ export const ExpenseList = ({
 
       {filter
         ? filteredExpense.map(expense => (
-            <ExpenseCard
-              key={expense.id}
-              expense={expense}
-              setShowExpenseModal={setShowExpenseModal}
-              setExpense={setExpense}
-            />
-          ))
+          <ExpenseCard
+            key={expense.id}
+            expense={expense}
+            setShowExpenseModal={setShowExpenseModal}
+            setExpense={setExpense}
+          />
+        ))
         : expenses.map(expense => (
-            <ExpenseCard
-              key={expense.id}
-              expense={expense}
-              setShowExpenseModal={setShowExpenseModal}
-              setExpense={setExpense}
-            />
-          ))}
-
-      {expenses.length === 0 ||
-        (filteredExpense.length === 0 && !!filter && (
-          <Text style={styles.noExpense}>There are no expenses</Text>
+          <ExpenseCard
+            key={expense.id}
+            expense={expense}
+            setShowExpenseModal={setShowExpenseModal}
+            setExpense={setExpense}
+          />
         ))}
+
+      {(expenses.length === 0 ||
+        (filteredExpense.length === 0 && !!filter)) && (
+          <Text style={styles.noExpense}>There are no expenses</Text>
+        )}
     </View>
   );
 };
@@ -51,7 +51,7 @@ export const ExpenseList = ({
 const styles = StyleSheet.create({
   container: {
     marginTop: 20,
-    marginBottom: 100,
+    marginBottom: 60,
   },
   title: {
     color: '#64748B',
